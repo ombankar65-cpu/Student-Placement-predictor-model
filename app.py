@@ -1,81 +1,85 @@
 import streamlit as st
+import pandas as pd
 import pickle
 import numpy as np
 
-# ------------------------------
-# Page Config
-# ------------------------------
+# Page Configuration
 st.set_page_config(
-    page_title="ML Model Predictor",
-    page_icon="🤖",
+    page_title="Campus Placement Predictor",
+    page_icon="🎓",
     layout="centered"
 )
 
-# ------------------------------
-# Custom CSS for Attractive UI
-# ------------------------------
+# Custom CSS for borders and styling
 st.markdown("""
     <style>
     .main {
-        background-color: #f5f7fa;
+        background-color: #f5f7f9;
     }
-
-    .prediction-box {
-        padding: 30px;
-        border-radius: 15px;
-        border: 2px solid #4CAF50;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-        background-color: white;
-    }
-
-    .title {
-        text-align: center;
-        color: #4CAF50;
-        font-size: 32px;
-        font-weight: bold;
-    }
-
     .stButton>button {
         width: 100%;
-        border-radius: 10px;
-        height: 45px;
-        font-size: 16px;
-        background-color: #4CAF50;
+        border-radius: 5px;
+        height: 3em;
+        background-color: #007bff;
         color: white;
     }
+    .prediction-card {
+        padding: 20px;
+        border: 2px solid #007bff;
+        border-radius: 10px;
+        background-color: white;
+        text-align: center;
+    }
     </style>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
-# ------------------------------
-# Title
-# ------------------------------
-st.markdown('<p class="title">Machine Learning Prediction App 🚀</p>', unsafe_allow_html=True)
-st.write("Fill the details below to get prediction")
+# Load the model
+@st.cache_resource
+def load_model():
+    with open('model.pkl', 'rb') as file:
+        return pickle.load(file)
 
-# ------------------------------
-# Load Model
-# ------------------------------
-with open("model.pkl", "rb") as file:
-    model = pickle.load(file)
+model = load_model()
 
-# ------------------------------
-# Input Section (Edit as per your model)
-# ------------------------------
-st.markdown('<div class="prediction-box">', unsafe_allow_html=True)
+# Header Section
+st.title("🎓 Student Placement Predictor")
+st.markdown("Enter student academic details below to predict placement probability.")
+st.divider()
 
-feature1 = st.number_input("Enter Feature 1")
-feature2 = st.number_input("Enter Feature 2")
-feature3 = st.number_input("Enter Feature 3")
+# Input Layout using Columns and Borders
+with st.container():
+    st.subheader("📊 Academic Information")
+    
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        gender = st.selectbox("Gender", options=[0, 1], format_func=lambda x: "Male" if x == 1 else "Female")
+        ssc_p = st.number_input("10th Percentage (ssc_p)", min_value=0.0, max_value=100.0, value=65.0)
+        hsc_p = st.number_input("12th Percentage (hsc_p)", min_value=0.0, max_value=100.0, value=65.0)
+        
+    with col2:
+        hsc_s = st.selectbox("12th Stream (hsc_s)", options=[0, 1, 2], format_func=lambda x: ["Commerce", "Science", "Arts"][x])
+        degree_p = st.number_input("Degree Percentage", min_value=0.0, max_value=100.0, value=65.0)
+        mba_p = st.number_input("MBA Percentage", min_value=0.0, max_value=100.0, value=65.0)
 
-predict_button = st.button("Predict")
+st.divider()
 
-st.markdown('</div>', unsafe_allow_html=True)
+# Prediction Logic
+if st.button("Predict Placement Status"):
+    # Prepare input array based on model feature names 
+    # ['gender', 'ssc_p', 'hsc_p', 'hsc_s', 'degree_p', 'mba_p']
+    features = np.array([[gender, ssc_p, hsc_p, hsc_s, degree_p, mba_p]])
+    
+    prediction = model.predict(features)
+    probability = model.predict_proba(features)
 
-# ------------------------------
-# Prediction
-# ------------------------------
-if predict_button:
-    input_data = np.array([[feature1, feature2, feature3]])
-    prediction = model.predict(input_data)
-
-    st.success(f"Prediction Result: {prediction[0]}")
+    # Output Section
+    st.subheader("Results")
+    
+    if prediction[0] == "Placed":
+        st.balloons()
+        st.success(f"### Result: {prediction[0]}")
+        st.markdown(f"**Confidence Score:** {max(probability[0])*100:.2f}%")
+    else:
+        st.error(f"### Result: {prediction[0]}")
+        st.markdown(f"**Improvement suggested.** Confidence Score: {max(probability[0])*100:.2f}%")
