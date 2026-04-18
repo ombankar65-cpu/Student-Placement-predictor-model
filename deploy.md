@@ -2,17 +2,19 @@
 - step 1 : navigate to ec2 instance and click on lanch instance 
 ![](./images/file1.png)
 
-- step 2: chose key pair and instance type according to reqirement
 ![](./images/file2.png)
 
-
-- step 3: chose existing sequrity group defalt to avoid confusion
+- step 2: chose key pair and instance type according to reqirement
 ![](./images/file3.png)
 
 
-- step 4: lanch ec2 instance and take ssh to ec2 instance
+- step 3: chose existing sequrity group defalt to avoid confusion
 ![](./images/file4.png)
+
+
+- step 4: lanch ec2 instance and take ssh to ec2 instance
 ![](./images/file5.png)
+
 ![](./images/file6.png)
 
 
