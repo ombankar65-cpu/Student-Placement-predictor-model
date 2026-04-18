@@ -33,6 +33,8 @@ git clone https://github.com/ombankar65-cpu/Student-Placement-predictor-model.gi
 ```bash
 sudo apt install python3 python3-pip python3-venv -y
 cd ~/Student-Placement-predictor-model
+```
+```
 python3 -m venv venv
 source venv/bin/activate
 ```
