@@ -60,11 +60,12 @@ streamlit run app.py
 ## If any Error Occurs that probably becase of Sequrity group port number is not allowed 
 - navigate to SG in ec2 instance
 ![](./images/file8.png)
-- check for inbound port which ports are allowed and check
+- check for inbound port which ports are allowed and check and edit inbound port 
 
 ![](./images/file9.png)
 - if reqierd port is not enabled as application is running on http://public_IP:8501
 - stimlit run on 8501 port so vitalist that port or allow all trafic on IPv4 anywhere
+
 ![](./images/file10.png)
 
 
