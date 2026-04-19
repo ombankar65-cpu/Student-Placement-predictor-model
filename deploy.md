@@ -29,6 +29,12 @@ apt update -y
 git clone https://github.com/ombankar65-cpu/Student-Placement-predictor-model.git
 ```
 
+- step 6.1 install python3 & pip
+```bash
+sudo apt update
+sudo apt install python3-pip python3-venv -y
+```
+
 - step 7: install python adn set environment
 ```bash
 sudo apt install python3 python3-pip python3-venv -y
