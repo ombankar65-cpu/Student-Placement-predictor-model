@@ -1,27 +1,14 @@
-# Use official Python image
 FROM python:3.10-slim
 
-# Set working directory
 WORKDIR /app
 
-# Copy project files
-COPY . /app
+COPY . .
 
-# Install system dependencies (optional but useful)
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Python dependencies
-# If requirements.txt exists
-RUN pip install --no-cache-dir -r requirements.txt || true
+# Flask apps must bind to 0.0.0.0
+ENV FLASK_APP=app.py
 
-# If requirements.txt doesn't exist, fallback install
-RUN pip install --no-cache-dir \
-    numpy pandas scikit-learn matplotlib seaborn jupyter
+EXPOSE 5000
 
-# Expose port (for notebook or app)
-EXPOSE 8888
-
-# Default command (Jupyter Notebook)
-CMD ["jupyter", "notebook", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+CMD ["python", "app.py"]
